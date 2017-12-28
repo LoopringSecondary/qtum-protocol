@@ -32,13 +32,11 @@ contract LRQToken is StandardToken {
     /// See https://etherscan.io/address/0xEF68e7C694F40c8202821eDF525dE3782458639f#readContract
     uint private constant LRC_TOTAL_SUPPLY = 1395076054523857892274603100;
 
-    function LRQToken(address _initialHolder) public {
-        require(0x0 != _initialHolder);
+    function LRQToken() public {
+        totalSupply = LRC_TOTAL_SUPPLY / 10;
+        initialHolder = msg.sender;
 
-        totalSupply = LRC_TOTAL_SUPPLY;
-        initialHolder = _initialHolder;
-
-        balances[initialHolder] = totalSupply;
+        balances[msg.sender] = totalSupply;
     }
 
     /// @dev Disable default function.
