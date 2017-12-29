@@ -24,7 +24,7 @@ If the Loopring Protocol can evolve into a cross-chain protocol, we'll propose a
     link: https://explorer.Qtum.org/address/QQruCwurjS9Nqy5PGmdSNrALhRsbZCeWvK
 ```
 
-### Loopring Protocol version1.0:
+### Protocol v1.0.0:
 ```
     1. TokenTransferDelegate:
         * Qtum address: QV2aQmR4FppywaQAn6ArMBEa5UgQhCJqbk
