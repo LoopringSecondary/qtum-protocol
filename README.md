@@ -25,6 +25,7 @@ If the Loopring Protocol can evolve into a cross-chain protocol, we'll propose a
 ```
 
 ### Loopring Protocol version1.0:
+```
 1. TokenTransferDelegate:
     * qtum address: QV2aQmR4FppywaQAn6ArMBEa5UgQhCJqbk
     * hex address: 5c679f5dd70832ce2b08a231b9176e8cd1c5d6ea
@@ -37,3 +38,4 @@ If the Loopring Protocol can evolve into a cross-chain protocol, we'll propose a
 4. LoopringProtocolImpl:
     * qtum address: QdT9We7mo2oaBFnmDXWDRAPHBuhSCaq9SA
     * hex address: b8ce3e51bf21cb2611c3840d6066d1acac348d1b
+```
