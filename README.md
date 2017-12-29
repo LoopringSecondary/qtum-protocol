@@ -1,4 +1,4 @@
-# README
+# Loopring on Qtum
 
 This is the Loopring Protocol implemented on Qtum public blockchain. Given Qtum and Ethereum are similiar in terms of smart-contract support, we will try to make sure the protocol is implemented consistently between these two blockchains.
 
