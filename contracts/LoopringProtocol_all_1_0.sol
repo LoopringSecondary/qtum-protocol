@@ -85,12 +85,12 @@ library MathUint {
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/// @title ERC20 Token Interface
+/// @title QRC20 Token Interface
 /// @dev see https://github.com/ethereum/EIPs/issues/20
 /// @author Daniel Wang - <daniel@loopring.org>
-contract ERC20 {
+contract QRC20 {
     uint public totalSupply;
-	
+
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
     function balanceOf(address who) view public returns (uint256);
@@ -521,10 +521,10 @@ contract TokenRegistry is Claimable {
     address[] public addresses;
     mapping (address => TokenInfo) addressMap;
     mapping (string => address) symbolMap;
-    
+
     uint8 public constant TOKEN_STANDARD_ERC20   = 0;
     uint8 public constant TOKEN_STANDARD_ERC223  = 1;
-    
+
     ////////////////////////////////////////////////////////////////////////////
     /// Structs                                                              ///
     ////////////////////////////////////////////////////////////////////////////
@@ -534,13 +534,13 @@ contract TokenRegistry is Claimable {
         uint8  standard; // ERC20 or ERC223
         string symbol;   // Symbol of the token
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
     /// Events                                                               ///
     ////////////////////////////////////////////////////////////////////////////
     event TokenRegistered(address addr, string symbol);
     event TokenUnregistered(address addr, string symbol);
-    
+
     ////////////////////////////////////////////////////////////////////////////
     /// Public Functions                                                     ///
     ////////////////////////////////////////////////////////////////////////////
@@ -555,7 +555,7 @@ contract TokenRegistry is Claimable {
         external
         onlyOwner
     {
-        registerStandardToken(addr, symbol, TOKEN_STANDARD_ERC20);    
+        registerStandardToken(addr, symbol, TOKEN_STANDARD_ERC20);
     }
     function registerStandardToken(
         address addr,
@@ -573,7 +573,7 @@ contract TokenRegistry is Claimable {
         addresses.push(addr);
         symbolMap[symbol] = addr;
         addressMap[addr] = TokenInfo(addresses.length, standard, symbol);
-        TokenRegistered(addr, symbol);      
+        TokenRegistered(addr, symbol);
     }
     function unregisterToken(
         address addr,
@@ -585,15 +585,15 @@ contract TokenRegistry is Claimable {
         require(addr != 0x0);
         require(symbolMap[symbol] == addr);
         delete symbolMap[symbol];
-        
+
         uint pos = addressMap[addr].pos;
         require(pos != 0);
         delete addressMap[addr];
-        
+
         // We will replace the token we need to unregister with the last token
         // Only the pos of the last token will need to be updated
         address lastToken = addresses[addresses.length - 1];
-        
+
         // Don't do anything if the last token is the one we want to delete
         if (addr != lastToken) {
             // Swap with the last token and update the pos
@@ -629,7 +629,7 @@ contract TokenRegistry is Claimable {
         }
         return true;
     }
-    
+
     function getTokenStandard(address addr)
         public
         view
@@ -646,7 +646,7 @@ contract TokenRegistry is Claimable {
     {
         return symbolMap[symbol];
     }
-    
+
     function getTokens(
         uint start,
         uint count
@@ -656,11 +656,11 @@ contract TokenRegistry is Claimable {
         returns (address[] addressList)
     {
         uint num = addresses.length;
-        
+
         if (start >= num) {
             return;
         }
-        
+
         uint end = start + count;
         if (end > num) {
             end = num;
@@ -668,7 +668,7 @@ contract TokenRegistry is Claimable {
         if (start == num) {
             return;
         }
-        
+
         addressList = new address[](end - start);
         for (uint i = start; i < end; i++) {
             addressList[i - start] = addresses[i];
@@ -688,8 +688,8 @@ contract TokenRegistry is Claimable {
   limitations under the License.
 */
 /// @title TokenTransferDelegate
-/// @dev Acts as a middle man to transfer ERC20 tokens on behalf of different
-/// versions of Loopring protocol to avoid ERC20 re-authorization.
+/// @dev Acts as a middle man to transfer QRC20 tokens on behalf of different
+/// versions of Loopring protocol to avoid QRC20 re-authorization.
 /// @author Daniel Wang - <daniel@loopring.org>.
 contract TokenTransferDelegate is Claimable {
     using MathUint for uint;
@@ -788,7 +788,7 @@ contract TokenTransferDelegate is Claimable {
             addr = addrInfo.previous;
         }
     }
-    /// @dev Invoke ERC20 transferFrom method.
+    /// @dev Invoke QRC20 transferFrom method.
     /// @param token Address of token to transfer.
     /// @param from Address to transfer token from.
     /// @param to Address to transfer token to.
@@ -803,7 +803,7 @@ contract TokenTransferDelegate is Claimable {
     {
         if (value > 0 && from != to) {
             require(
-                ERC20(token).transferFrom(from, to, value)
+                QRC20(token).transferFrom(from, to, value)
             );
         }
     }
@@ -816,13 +816,13 @@ contract TokenTransferDelegate is Claimable {
     {
         uint len = batch.length;
         require(len % 6 == 0);
-        ERC20 lrc = ERC20(lrcTokenAddress);
+        QRC20 lrc = QRC20(lrcTokenAddress);
         for (uint i = 0; i < len; i += 6) {
             address owner = address(batch[i]);
             address prevOwner = address(batch[(i + len - 6) % len]);
             // Pay token to previous order, or to miner as previous order's
             // margin split or/and this order's margin split.
-            ERC20 token = ERC20(address(batch[i + 1]));
+            QRC20 token = QRC20(address(batch[i + 1]));
             // Here batch[i+2] has been checked not to be 0.
             if (owner != prevOwner) {
                 require(
@@ -1521,7 +1521,7 @@ contract LoopringProtocolImpl is LoopringProtocol {
             );
         }
     }
-    /// @return Amount of ERC20 token that can be spent by this contract.
+    /// @return Amount of QRC20 token that can be spent by this contract.
     function getSpendable(
         TokenTransferDelegate delegate,
         address tokenAddress,
@@ -1531,7 +1531,7 @@ contract LoopringProtocolImpl is LoopringProtocol {
         view
         returns (uint)
     {
-        ERC20 token = ERC20(tokenAddress);
+        QRC20 token = QRC20(tokenAddress);
         uint allowance = token.allowance(
             tokenOwner,
             address(delegate)
