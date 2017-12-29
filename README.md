@@ -15,16 +15,16 @@ If the Loopring Protocol can evolve into a cross-chain protocol, we'll propose a
     npm run compile
 ```    
  
-## Deployed on Qtum main-net:  
+## Deployment on Qtum mainnet:  
 
-### LRQ:
+#### LRQ:
 ```
     Qtum address: QQruCwurjS9Nqy5PGmdSNrALhRsbZCeWvK
     HEX address: 2eb2a66afd4e465fb06d8b71f30fb1b93e18788d
     link: https://explorer.Qtum.org/address/QQruCwurjS9Nqy5PGmdSNrALhRsbZCeWvK
 ```
 
-### Protocol v1.0.0:
+#### Protocol v1.0.0:
 ```
     1. TokenTransferDelegate:
         * Qtum address: QV2aQmR4FppywaQAn6ArMBEa5UgQhCJqbk
