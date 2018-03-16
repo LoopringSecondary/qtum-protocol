@@ -15,7 +15,7 @@
   limitations under the License.
 
 */
-pragma solidity 0.4.18;
+pragma solidity 0.4.19;
 
 
 /// @title Transferable Multisignature Contract
@@ -81,7 +81,9 @@ contract TransferableMultsig {
             txHash
         );
 
-        require(destination.call.value(value)(data));
+        require(
+            destination.call.value(value)(data)
+        );
     }
 
     // Note that address recovered from signatures must be strictly increasing.

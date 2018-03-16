@@ -15,7 +15,7 @@
   limitations under the License.
 
 */
-pragma solidity 0.4.18;
+pragma solidity 0.4.19;
 
 import "./lib/QRC20.sol";
 import "./lib/MathUint.sol";
@@ -119,14 +119,6 @@ contract TokenTransferDelegate is Claimable {
         }
     }
 
-    function isAddressAuthorized(address addr)
-        public
-        view
-        returns (bool)
-    {
-        return addressInfos[addr].authorized;
-    }
-
     function getLatestAuthorizedAddresses(uint max)
         external
         view
@@ -160,7 +152,7 @@ contract TokenTransferDelegate is Claimable {
         onlyAuthorized
         external
     {
-        if (value > 0 && from != to) {
+        if (value > 0 && from != to && to != 0x0) {
             require(
                 QRC20(token).transferFrom(from, to, value)
             );
@@ -195,7 +187,7 @@ contract TokenTransferDelegate is Claimable {
                 );
             }
 
-            if (owner != feeRecipient) {
+            if (feeRecipient != 0x0 && owner != feeRecipient) {
                 bytes32 item = batch[i + 3];
                 if (item != 0) {
                     require(
@@ -218,5 +210,13 @@ contract TokenTransferDelegate is Claimable {
                 }
             }
         }
+    }
+
+    function isAddressAuthorized(address addr)
+        public
+        view
+        returns (bool)
+    {
+        return addressInfos[addr].authorized;
     }
 }
