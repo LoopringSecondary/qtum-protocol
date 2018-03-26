@@ -41,6 +41,15 @@ contract LrxAirdrop is Claimable {
         tokenAddress = 0x0; // change this to real token address when deploy to main-net.
     }
 
+    /// tokenAddress can only be set once by owner.
+    function setTokenAddress(address _tokenAddress)
+        external
+        onlyOwner
+    {
+        require(tokenAddress == 0x0);
+        tokenAddress = _tokenAddress;
+    }
+
     function setLrxAmount(address recipient, uint amount)
         external
         onlyOwner

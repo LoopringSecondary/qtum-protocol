@@ -1,10 +1,12 @@
 const LrxAirdrop = artifacts.require('./LrxAirdrop.sol')
+const LrxToken = artifacts.require('./DummyToken.sol')
 
 contract('LrxAirdrop', async (accounts) => {
   const owner = accounts[0];
   const user = accounts[2];
 
   let airdropContract;
+  let lrxTokenContract;
 
   const increaseTime = function(duration) {
     const id = Date.now()
@@ -29,6 +31,10 @@ contract('LrxAirdrop', async (accounts) => {
 
   before(async () => {
     airdropContract = await LrxAirdrop.deployed();
+    lrxTokenContract = await LrxToken.deployed();
+
+    await airdropContract.setTokenAddress(lrxTokenContract.address, {from: owner});
+    // console.log("lrxTokenContract.address:", lrxTokenContract.address);
   });
 
   describe('owner', () => {
@@ -55,9 +61,16 @@ contract('LrxAirdrop', async (accounts) => {
 
     it('should be able to withdraw lrx', async () => {
       const secsInDay = 3600 * 24;
+
       await increaseTime(secsInDay * 10);
 
-      assert.equal(true, true, "");
+      await lrxTokenContract.setBalance(airdropContract.address, 100e18, {from: owner});
+      await lrxTokenContract.setBalance(user, 0, {from: owner});
+
+      const tx = await airdropContract.withdrawl({from: user});
+      // console.log("tx.receipt.logs: ", tx.receipt.logs);
+      const userTokenBalance = await lrxTokenContract.balanceOf(user);
+      assert.equal(userTokenBalance.toNumber(), 100e18 * 10 / (3 * 365), "incorrect withdraw amount");
     });
   });
 
